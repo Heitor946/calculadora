@@ -1,0 +1,321 @@
+local p=game:GetService("Players").LocalPlayer
+local r=game:GetService("ReplicatedStorage")
+local t=game:GetService("TweenService")
+local ts=game:GetService("TeleportService")
+local hs=game:GetService("HttpService")
+local w=workspace
+local L=game:GetService("Lighting")
+local US=game:GetService("UserSettings")
+local uis=game:GetService("UserInputService")
+local cg=game:GetService("CoreGui")
+
+pcall(function()r.Remotes.CommF_:InvokeServer("SetTeam","Marines")end)
+
+-- ANTILAG
+local T={Decal=1,Texture=1,MeshPart=1,SpecialMesh=1,SurfaceAppearance=1,SurfaceGui=1,ImageLabel=1,ImageButton=1,Sky=1,Clouds=1,Shirt=1,Pants=1,ShirtGraphic=1,ParticleEmitter=1,Trail=1,Beam=1,Fire=1,Smoke=1,Sparkles=1,PointLight=1,SpotLight=1,SurfaceLight=1,Atmosphere=1,BloomEffect=1,BlurEffect=1,ColorCorrectionEffect=1,SunRaysEffect=1,DepthOfFieldEffect=1}
+local function k(o)
+    if not o or not o.Parent then return end
+    local c=o.ClassName
+    pcall(function()
+        if c=="Decal"or c=="Texture"then o.Texture="" o.Transparency=1
+        elseif c=="MeshPart"then o.TextureID="" o.Material=Enum.Material.SmoothPlastic o.Reflectance=0 o.CastShadow=false
+        elseif c=="SpecialMesh"then o.TextureId="" o.MeshId=""
+        elseif c=="SurfaceAppearance"then o.ColorMap="" o.NormalMap="" o.RoughnessMap="" o.MetalnessMap=""
+        elseif c=="SurfaceGui"then o.Enabled=false
+        elseif c=="ImageLabel"or c=="ImageButton"then o.ImageTransparency=1 o.BackgroundTransparency=1
+        elseif c=="Sky"then o.SkyboxBk="" o.SkyboxDn="" o.SkyboxFt="" o.SkyboxLf="" o.SkyboxRt="" o.SkyboxUp="" o.StarCount=0 o.SunAngularSize=0 o.MoonAngularSize=0
+        elseif c=="Clouds"then o.Enabled=false
+        elseif c=="ParticleEmitter"or c=="Trail"or c=="Beam"then o.Texture="" o.Enabled=false
+        elseif c=="Fire"or c=="Smoke"or c=="Sparkles"then o.Enabled=false
+        elseif c=="PointLight"or c=="SpotLight"or c=="SurfaceLight"then o.Enabled=false
+        elseif c=="Atmosphere"then o.Density=0 o.Haze=0 o.Glare=0
+        elseif c=="BloomEffect"or c=="SunRaysEffect"or c=="ColorCorrectionEffect"or c=="DepthOfFieldEffect"or c=="BlurEffect"then o.Enabled=false
+        elseif o:IsA("BasePart")then o.CastShadow=false o.Reflectance=0
+            if o.Material~=Enum.Material.SmoothPlastic and o.Material~=Enum.Material.Plastic then o.Material=Enum.Material.SmoothPlastic end
+        end
+    end)
+end
+local function gk()
+    pcall(function()US.GameSettings.GraphicsQuality=Enum.QualityLevel.Level1 end)
+    pcall(function()L.GlobalShadows=false L.ShadowSoftness=0 L.Brightness=2 L.Ambient=Color3.fromRGB(90,90,90) L.OutdoorAmbient=Color3.fromRGB(110,110,110) L.EnvironmentDiffuseScale=0 L.EnvironmentSpecularScale=0 L.FogStart=9e9 L.FogEnd=9e9 end)
+    pcall(function()local tm=w:FindFirstChildOfClass("Terrain")if tm then tm.WaterWaveSize=0 tm.WaterWaveSpeed=0 tm.WaterReflectance=0 tm.WaterTransparency=1 tm.Decoration=false end end)
+end
+local function ap()
+    task.spawn(function()
+        local n=0
+        for _,rt in ipairs({w,p:FindFirstChild("PlayerGui"),L,game:GetService("ReplicatedStorage"),game:GetService("StarterGui")})do
+            if rt then for _,o in ipairs(rt:GetDescendants())do k(o)n=n+1 if n%400==0 then task.wait()end end end
+        end
+        gk()
+    end)
+end
+L:GetPropertyChangedSignal("Brightness"):Connect(function()if L.Brightness~=2 then L.Brightness=2 end end)
+L:GetPropertyChangedSignal("Ambient"):Connect(function()if L.Ambient~=Color3.fromRGB(90,90,90)then L.Ambient=Color3.fromRGB(90,90,90)end end)
+L:GetPropertyChangedSignal("OutdoorAmbient"):Connect(function()if L.OutdoorAmbient~=Color3.fromRGB(110,110,110)then L.OutdoorAmbient=Color3.fromRGB(110,110,110)end end)
+game.DescendantAdded:Connect(function(o)if T[o.ClassName]or o:IsA("BasePart")then task.defer(k,o)end end)
+task.spawn(function()while true do task.wait(60)ap()end end)
+ap()
+
+-- UI
+local g=Instance.new("ScreenGui")
+g.Name="FruitHunter_"..tick()
+g.ResetOnSpawn=false
+g.IgnoreGuiInset=true
+g.ZIndexBehavior=Enum.ZIndexBehavior.Sibling
+if syn and syn.protect_gui then pcall(function()syn.protect_gui(g)end) end
+local parentGui=(gethui and gethui()) or cg
+g.Parent=parentGui
+
+local b=Instance.new("TextButton",g)
+b.Size=UDim2.new(0,100,0,32)
+b.Position=UDim2.new(0.5,-50,0.1,0)
+b.Text="ON"
+b.BackgroundColor3=Color3.new(0,0,0)
+b.TextColor3=Color3.new(0,1,0)
+b.Font=Enum.Font.GothamBold
+b.Active=true
+b.AutoButtonColor=false
+Instance.new("UICorner",b).CornerRadius=UDim.new(0,6)
+
+local hb=Instance.new("TextButton",g)
+hb.Size=UDim2.new(0,100,0,32)
+hb.Position=UDim2.new(0.5,-50,0.1,38)
+hb.Text="HOP"
+hb.BackgroundColor3=Color3.new(0,0,0)
+hb.TextColor3=Color3.new(0,0.6,1)
+hb.Font=Enum.Font.GothamBold
+hb.Active=true
+hb.AutoButtonColor=false
+Instance.new("UICorner",hb).CornerRadius=UDim.new(0,6)
+
+local on=true
+b.MouseButton1Click:Connect(function()
+    on=not on
+    b.Text=on and"ON"or"OFF"
+    b.TextColor3=on and Color3.new(0,1,0)or Color3.new(1,0,0)
+end)
+
+-- HOP
+local ho=false
+local vis={}
+local function hop()
+    if ho then return end
+    ho=true
+    hb.Text="..."
+    task.spawn(function()
+        for tn=1,3 do
+            local ok=pcall(function()
+                local url="https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100&excludeFullGames=true"
+                local d=hs:JSONDecode(game:HttpGet(url)).data
+                assert(d and #d>0,"vazio")
+                local ls={}
+                for _,s in ipairs(d)do
+                    if s.id and s.id~=game.JobId and (s.maxPlayers-s.playing)>=3 and (s.ping or 0)<200 and not vis[s.id] then
+                        table.insert(ls,{id=s.id,ping=s.ping or 999})
+                    end
+                end
+                assert(#ls>0,"sem servidor")
+                table.sort(ls,function(a,b)return a.ping<b.ping end)
+                local e=ls[math.random(1,math.min(#ls,5))]
+                vis[e.id]=true
+                if #vis>20 then vis={} end
+                local ok2=pcall(function()
+                    local opt=Instance.new("TeleportOptions")
+                    opt.ServerInstanceId=e.id
+                    ts:TeleportAsync(game.PlaceId,{p},opt)
+                end)
+                if not ok2 then ts:TeleportToPlaceInstance(game.PlaceId,e.id,p) end
+            end)
+            if ok then task.wait(10) break end
+            task.wait(2^tn)
+        end
+        hb.Text="HOP"
+        ho=false
+    end)
+end
+hb.MouseButton1Click:Connect(hop)
+
+-- FRUTAS
+local F={Rocket=1,Spin=1,Chop=1,Spring=1,Bomb=1,Smoke=1,Spike=1,Flame=1,Falcon=1,Ice=1,Sand=1,Dark=1,Diamond=1,Light=1,Rubber=1,Barrier=1,Magma=1,Quake=1,Buddha=1,Love=1,Spider=1,Sound=1,Phoenix=1,Portal=1,Rumble=1,Pain=1,Blizzard=1,Gravity=1,Mammoth=1,["T-Rex"]=1,Dough=1,Shadow=1,Venom=1,Control=1,Spirit=1,Dragon=1,Leopard=1,Kitsune=1,Yeti=1,Gas=1}
+
+local function lbl(hd,n)
+    if hd:FindFirstChild("FL")then return end
+    local bb=Instance.new("BillboardGui",hd)
+    bb.Name="FL"
+    bb.Size=UDim2.new(0,200,0,50)
+    bb.StudsOffset=Vector3.new(0,4,0)
+    bb.AlwaysOnTop=true
+    local tl=Instance.new("TextLabel",bb)
+    tl.Size=UDim2.new(1,0,1,0)
+    tl.BackgroundTransparency=1
+    tl.Text="Blox Fruit "..n
+    tl.TextColor3=Color3.fromRGB(255,220,50)
+    tl.TextStrokeTransparency=0
+    tl.TextStrokeColor3=Color3.new(0,0,0)
+    tl.Font=Enum.Font.GothamBold
+    tl.TextSize=16
+end
+
+-- ═══════════════════════════════════════
+-- 📦 AUTO-ARMAZENAR (VERSÃO REFORÇADA)
+-- ═══════════════════════════════════════
+
+-- Tenta todos os métodos possíveis para "clicar" em um objeto
+local function tentarClicar(obj)
+    pcall(function() if firesignal then firesignal(obj.MouseButton1Click) end end)
+    pcall(function() if firesignal then firesignal(obj.MouseButton1Down) end end)
+    pcall(function() if firesignal then firesignal(obj.Activated) end end)
+    pcall(function() obj:Activate() end)
+    pcall(function() obj.MouseButton1Click:Fire() end)
+    pcall(function() obj.Activated:Fire() end)
+    pcall(function() obj:Click() end) -- MÉTODO ADICIONADO: Click nativo do Roblox
+    pcall(function()
+        if getconnections then
+            for _,c in ipairs(getconnections(obj.MouseButton1Click))do c:Fire()end
+            for _,c in ipairs(getconnections(obj.Activated))do c:Fire()end
+        end
+    end)
+    pcall(function()
+        if fireclickdetector then
+            local cd=obj:FindFirstChildOfClass("ClickDetector")
+            if cd then fireclickdetector(cd) end
+        end
+    end)
+end
+
+local function clicarArmazenar()
+    local guis={p:FindFirstChild("PlayerGui")}
+    if gethui then
+        local h=gethui()
+        if h then table.insert(guis,h) end
+    end
+    table.insert(guis,cg)
+    for _,gui in ipairs(guis)do
+        if gui then
+            for _,o in ipairs(gui:GetDescendants())do
+                if (o:IsA("TextButton")or o:IsA("ImageButton")or o:IsA("TextLabel"))and o.Visible then
+                    local txt=((o.Text or "")..(o.Name or "")):lower()
+                    if (txt:find("armazenar")or txt:find("store")or txt:find("guardar"))
+                       and not txt:find("comer")and not txt:find("eat")then
+                        tentarClicar(o)
+                        if o.Parent then tentarClicar(o.Parent) end
+                        return true
+                    end
+                end
+            end
+        end
+    end
+    return false
+end
+
+-- Loop 1: Tenta clicar no popup o mais rápido possível
+task.spawn(function()
+    while task.wait(0.1)do -- INTERVALO REDUZIDO
+        if on then pcall(clicarArmazenar)end
+    end
+end)
+
+-- Loop 2: Força o armazenamento se a fruta foi para o Backpack
+task.spawn(function()
+    while task.wait(0.5)do -- INTERVALO REDUZIDO
+        if on and p.Character and p.Backpack then
+            pcall(function()
+                local hm=p.Character:FindFirstChildOfClass("Humanoid")
+                if not hm then return end
+                for _,i in ipairs(p.Backpack:GetChildren())do
+                    if i:IsA("Tool")and i.Name:find("Fruit")then
+                        local n=i.Name:gsub("Fruit",""):gsub("%s",""):gsub("_","")
+                        if F[n]then
+                            pcall(function()hm:EquipTool(i)end)
+                            task.wait(0.2)
+                            pcall(function()r.Remotes.CommF_:InvokeServer("StoreFruit",i.Name,i)end)
+                            task.wait(0.2)
+                        end
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+-- Loop 3: Força o armazenamento se a fruta estiver equipada na mão
+task.spawn(function()
+    while task.wait(0.3)do
+        if on and p.Character then
+            pcall(function()
+                local tool=p.Character:FindFirstChildOfClass("Tool")
+                if tool and tool.Name:find("Fruit")then
+                    local n=tool.Name:gsub("Fruit",""):gsub("%s",""):gsub("_","")
+                    if F[n]then
+                        r.Remotes.CommF_:InvokeServer("StoreFruit",tool.Name,tool)
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+-- ═══════════════════════════════════════
+-- 🚀 VOO + LOOP PRINCIPAL
+-- ═══════════════════════════════════════
+local function voar(h,hum,destino)
+    h.Anchored=true
+    hum.WalkSpeed=0
+    hum.JumpPower=0
+    local d=(h.Position-destino).Magnitude
+    local tw=t:Create(h,
+        TweenInfo.new(math.max(d/150,0.08),Enum.EasingStyle.Linear),
+        {CFrame=CFrame.new(destino+Vector3.new(0,3,0))})
+    tw:Play()
+    tw.Completed:Wait()
+    h.Anchored=false
+    hum.WalkSpeed=16
+    hum.JumpPower=50
+end
+
+task.spawn(function()
+    while task.wait(0.5)do
+        if on and p.Character and p.Character:FindFirstChild("HumanoidRootPart")then
+            local h=p.Character.HumanoidRootPart
+            local hum=p.Character:FindFirstChildOfClass("Humanoid")
+            local achou=false
+            for _,v in ipairs(w:GetDescendants())do
+                if v:IsA("Tool")and(v.Name:find("Fruit")or v.Name:find("Blox"))then
+                    local n=v.Name:gsub("Fruit",""):gsub("Blox",""):gsub("%s",""):gsub("_","")
+                    if F[n]then
+                        local hd=v:FindFirstChild("Handle")
+                        if hd then
+                            achou=true
+                            lbl(hd,n)
+                            voar(h,hum,hd.Position)
+                            pcall(function()
+                                if firetouchinterest then
+                                    firetouchinterest(hd,h,0)
+                                    task.wait(0.1)
+                                    firetouchinterest(hd,h,1)
+                                end
+                            end)
+                            task.wait(2)
+                            pcall(function()
+                                for _,i in ipairs(p.Backpack:GetChildren())do
+                                    if i:IsA("Tool")and i.Name:find("Fruit")then
+                                        local nm=i.Name:gsub("Fruit",""):gsub("%s",""):gsub("_","")
+                                        if F[nm]then
+                                            hum:EquipTool(i)task.wait(0.3)
+                                            r.Remotes.CommF_:InvokeServer("StoreFruit",i.Name,i)
+                                        end
+                                    end
+                                end
+                            end)
+                            break
+                        end
+                    end
+                end
+            end
+            if not achou then
+                task.wait(1)
+                hop()
+            end
+        end
+    end
+end)
